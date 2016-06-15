@@ -12,12 +12,6 @@ public class EnvironmentContollerTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-//	@Test
-//	public void test() {
-//		EnvironmentController cont = new EnvironmentController();
-//		Assert.assertEquals(3, 3);
-//	}
 	
 	@Test
 	public void testHeatOnBelow65() {
@@ -50,10 +44,50 @@ public class EnvironmentContollerTest {
 	public void testFanCantStartFor5MinAfterHeaterOff() {
 		EnvironmentController cont = new EnvironmentController(new HVACMock(70));
 		cont.heat(false);
-		cont.tick();
+		for (int i = 0 ; i < 5 ; i++) {
+			cont.fan(true);
+			cont.tick();
+			Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
+		}
 		cont.fan(true);
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
+		cont.tick();
+		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
 	}
 	
-//TODO make sure we can turn fan off 
+	@Test
+	public void testFanCantStartFor3MinAfterCoolerOff() {
+		EnvironmentController cont = new EnvironmentController(new HVACMock(70));
+		cont.cool(false);
+		for (int i = 0 ; i < 3 ; i++) {
+			cont.fan(true);
+			cont.tick();
+			Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
+		}
+		cont.fan(true);
+		cont.tick();
+		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+	}
+	
+	@Test
+	public void testFanCantStartAfterHeaterAndCoolerTurnOff() {
+		EnvironmentController cont = new EnvironmentController(new HVACMock(70));
+		cont.heat(false);
+		cont.cool(false);
+		for (int i = 0 ; i < 5 ; i++) {
+			cont.fan(true);
+			cont.tick();
+			Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
+		}
+		cont.fan(true);
+		cont.tick();
+		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+	}
+	
+	@Test
+	public void testTurnFanOffDuringCoolDown() {
+		EnvironmentController cont = new EnvironmentController(new HVACMock(70));
+		cont.heat(false);
+		cont.fan(false);
+		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+	}
 }

@@ -2,7 +2,7 @@
 public class EnvironmentController {
 
 	private HVAC hvac;
-	private boolean heatTurnedOff;
+	private int fanCoolOff = 0;
 
 	public HVAC getHvac() {
 		return hvac;
@@ -17,6 +17,7 @@ public class EnvironmentController {
 	}
 	
 	void tick() {
+		
 		if (hvac.temp() < 65) {
 			heat(true);
 			fan(true);
@@ -26,21 +27,29 @@ public class EnvironmentController {
 			cool(true);
 			fan(true);
 		}
+		fanCoolOff--;
 	}
 	
 	public void heat(boolean on) {
 		hvac.heat(on);
 		if (on == false) 
-			heatTurnedOff = true;
+			setFanCoolOff(5);
 	}
 	
 	public void cool(boolean on) {
 		hvac.cool(on);
+		if (on == false) 
+			setFanCoolOff(3);
 	}
 	
 	public void fan(boolean on) {
-		if (!heatTurnedOff)
+		if (fanCoolOff == 0 || on == false)
 			hvac.fan(on);
+	}
+	
+	private void setFanCoolOff(int ticks) {
+		if (fanCoolOff < ticks)
+			fanCoolOff = ticks;
 	}
 
 	public static void main(String[] args) {
