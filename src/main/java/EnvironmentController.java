@@ -46,7 +46,7 @@ public class EnvironmentController {
 			hvac.cool(on);
 			if (on == false) 
 				setFanCoolOff(3);
-			coolOn = true;
+			coolOn = on;
 		}
 	}
 	

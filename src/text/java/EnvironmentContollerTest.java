@@ -114,23 +114,23 @@ public class EnvironmentContollerTest {
 		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
 	}
 	
-//	@Test
-//	public void testTurnCoolOffTwiceDoesntResetTimer() {
-//		EnvironmentController cont = new EnvironmentController(new HVACMock(70));
-//		cont.cool(true);
-//		cont.cool(false);
-//		cont.tick();
-//		cont.tick();
-//		cont.tick();
-//		cont.tick();
-//		cont.tick();
-//		cont.tick();
-//		cont.tick();
-//		cont.tick();
-//		cont.tick();
-//		cont.tick();
-//		cont.cool(false);
-//		cont.fan(true);
-//		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
-//	}
+	@Test
+	public void testTurnCoolOffTwiceDoesntResetTimer() {
+		EnvironmentController cont = new EnvironmentController(new HVACMock(70));
+		cont.cool(true);
+		cont.cool(false);
+		cont.tick();
+		cont.tick();
+		cont.tick();
+		cont.tick();
+		cont.tick();
+		cont.tick();
+		cont.tick();
+		cont.tick();
+		cont.tick();
+		cont.tick();
+		cont.cool(false);
+		cont.fan(true);
+		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+	}
 }
