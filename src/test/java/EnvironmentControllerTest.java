@@ -3,7 +3,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class EnvironmentContollerTest {
+public class EnvironmentControllerTest {
 
 	@Before
 	public void setUp() throws Exception {
