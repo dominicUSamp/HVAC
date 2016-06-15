@@ -15,8 +15,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testHeatOnWhenToolCool() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.TOO_COOL.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.TOO_COOL.value));
 		cont.tick();
 		Assert.assertEquals(cont.heatOn, true);
 		Assert.assertEquals(cont.fanOn, true);
@@ -25,8 +25,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testCoolOnWhenTooHot() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.TOO_HOT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.TOO_HOT.value));
 		cont.tick();
 		Assert.assertEquals(cont.coolOn, true);
 		Assert.assertEquals(cont.fanOn, true);
@@ -35,8 +35,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testNothingOnWhenJustRight() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		
 		cont.tick();
 		Assert.assertEquals(cont.coolOn, false);
@@ -46,8 +46,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testFanCantStartFor5MinAfterHeaterOff() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		cont.heat(true);
 		cont.heat(false);
 		
@@ -62,8 +62,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testFanCantStartFor3MinAfterCoolOff() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		cont.cool(true);
 		cont.cool(false);
 		
@@ -78,8 +78,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testFanCantStartAfterHeaterAndCoolOff() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		cont.heat(true);
 		
 		cont.heat(false);
@@ -95,8 +95,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testTurnFanOffDuringCoolDown() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		cont.fan(true);
 		cont.heat(false);
 		
@@ -106,8 +106,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testTurnHeatOffTwiceDoesntResetTimer() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		cont.heat(true);
 		
 		cont.heat(false);
@@ -128,8 +128,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testTurnCoolOffTwiceDoesntResetTimer() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		cont.cool(true);
 		
 		cont.cool(false);
@@ -150,8 +150,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testCoolOffWhenJustRight() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		cont.cool(true);
 		
 		cont.tick();
@@ -160,8 +160,8 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void testHeatOffWhenJustRight() {
-		EnvironmentController cont = 
-				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
 		cont.heat(true);
 		
 		cont.tick();
