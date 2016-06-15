@@ -33,7 +33,7 @@ public class EnvironmentController {
 		if (hvac.temp() <= TemperatureValues.TOO_COOL.value) {
 			heat(true);
 			fan(true);
-		} else if (hvac.temp() > TemperatureValues.JUST_RIGHT.value - 2) {
+		} else if (hvac.temp() > TemperatureValues.JUST_RIGHT.value - 2 && !coolOn) {
 			heat(false);
 			fan(false);
 		}
@@ -41,7 +41,7 @@ public class EnvironmentController {
 		if (hvac.temp() >= TemperatureValues.TOO_HOT.value) {
 			cool(true);
 			fan(true);
-		} else if (hvac.temp() < TemperatureValues.JUST_RIGHT.value + 2) {
+		} else if (hvac.temp() < TemperatureValues.JUST_RIGHT.value + 2 && !heatOn) {
 			cool(false);
 			fan(false);
 		}

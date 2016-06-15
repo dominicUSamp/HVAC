@@ -18,8 +18,8 @@ public class EnvironmentContollerTest {
 		EnvironmentController cont = 
 				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.TOO_COOL.value));
 		cont.tick();
-		Assert.assertEquals(((HVACMock)cont.getHvac()).heatCalled, true);
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+		Assert.assertEquals(cont.heatOn, true);
+		Assert.assertEquals(cont.fanOn, true);
 		
 	}
 	
@@ -28,8 +28,8 @@ public class EnvironmentContollerTest {
 		EnvironmentController cont = 
 				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.TOO_HOT.value));
 		cont.tick();
-		Assert.assertEquals(((HVACMock)cont.getHvac()).coolCalled, true);
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+		Assert.assertEquals(cont.coolOn, true);
+		Assert.assertEquals(cont.fanOn, true);
 		
 	}
 	
@@ -39,9 +39,9 @@ public class EnvironmentContollerTest {
 				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
 		
 		cont.tick();
-		Assert.assertEquals(((HVACMock)cont.getHvac()).coolCalled, false);
-		Assert.assertEquals(((HVACMock)cont.getHvac()).heatCalled, false);
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
+		Assert.assertEquals(cont.coolOn, false);
+		Assert.assertEquals(cont.heatOn, false);
+		Assert.assertEquals(cont.fanOn, false);
 	}
 	
 	@Test
@@ -53,12 +53,11 @@ public class EnvironmentContollerTest {
 		
 		for (int i = 0 ; i < 5 ; i++) {
 			cont.fan(true);
+			Assert.assertEquals(cont.fanOn, false);
 			cont.tick();
-			Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
 		}
 		cont.fan(true);
-		cont.tick();
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+		Assert.assertEquals(cont.fanOn, true);
 	}
 	
 	@Test
@@ -70,12 +69,11 @@ public class EnvironmentContollerTest {
 		
 		for (int i = 0 ; i < 3 ; i++) {
 			cont.fan(true);
+			Assert.assertEquals(cont.fanOn, false);
 			cont.tick();
-			Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
 		}
 		cont.fan(true);
-		cont.tick();
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+		Assert.assertEquals(cont.fanOn, true);
 	}
 	
 	@Test
@@ -88,12 +86,11 @@ public class EnvironmentContollerTest {
 		cont.cool(false);
 		for (int i = 0 ; i < 5 ; i++) {
 			cont.fan(true);
+			Assert.assertEquals(cont.fanOn, false);
 			cont.tick();
-			Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
 		}
 		cont.fan(true);
-		cont.tick();
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+		Assert.assertEquals(cont.fanOn, true);
 	}
 	
 	@Test
@@ -126,7 +123,7 @@ public class EnvironmentContollerTest {
 		cont.tick();
 		cont.heat(false);
 		cont.fan(true);
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+		Assert.assertEquals(cont.fanOn, true);
 	}
 	
 	@Test
@@ -148,7 +145,7 @@ public class EnvironmentContollerTest {
 		cont.tick();
 		cont.cool(false);
 		cont.fan(true);
-		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, true);
+		Assert.assertEquals(cont.fanOn, true);
 	}
 	
 	@Test
