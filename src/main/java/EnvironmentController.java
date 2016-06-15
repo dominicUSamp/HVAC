@@ -3,6 +3,8 @@ public class EnvironmentController {
 
 	private HVAC hvac;
 	private int fanCoolOff = 0;
+	private boolean heatOn = false;
+	private boolean coolOn = false;
 
 	public HVAC getHvac() {
 		return hvac;
@@ -31,19 +33,25 @@ public class EnvironmentController {
 	}
 	
 	public void heat(boolean on) {
-		hvac.heat(on);
-		if (on == false) 
-			setFanCoolOff(5);
+		if (on != heatOn) {
+			hvac.heat(on);
+			if (on == false) 
+				setFanCoolOff(5);
+			heatOn = on;
+		}
 	}
 	
 	public void cool(boolean on) {
-		hvac.cool(on);
-		if (on == false) 
-			setFanCoolOff(3);
+		if (on != coolOn) {
+			hvac.cool(on);
+			if (on == false) 
+				setFanCoolOff(3);
+			coolOn = true;
+		}
 	}
 	
 	public void fan(boolean on) {
-		if (fanCoolOff == 0 || on == false)
+		if (fanCoolOff <= 0 || on == false)
 			hvac.fan(on);
 	}
 	
