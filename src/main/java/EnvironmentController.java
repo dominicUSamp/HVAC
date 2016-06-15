@@ -1,10 +1,20 @@
 
 public class EnvironmentController {
+	
+	public enum TemperatureValues {
+		TOO_COOL(64), JUST_RIGHT(70), TOO_HOT(76);
+		
+		public int value;
+		TemperatureValues(int value) {
+			this.value = value;
+		}
+	}
 
 	private HVAC hvac;
 	private int fanCoolOff = 0;
-	private boolean heatOn = false;
-	private boolean coolOn = false;
+	public boolean heatOn = false;
+	public boolean coolOn = false;
+	public boolean fanOn = false;
 
 	public HVAC getHvac() {
 		return hvac;
@@ -20,14 +30,20 @@ public class EnvironmentController {
 	
 	void tick() {
 		
-		if (hvac.temp() < 65) {
+		if (hvac.temp() <= TemperatureValues.TOO_COOL.value) {
 			heat(true);
 			fan(true);
+		} else if (hvac.temp() > TemperatureValues.JUST_RIGHT.value - 2) {
+			heat(false);
+			fan(false);
 		}
 		
-		if (hvac.temp() > 75) {
+		if (hvac.temp() >= TemperatureValues.TOO_HOT.value) {
 			cool(true);
 			fan(true);
+		} else if (hvac.temp() < TemperatureValues.JUST_RIGHT.value + 2) {
+			cool(false);
+			fan(false);
 		}
 		fanCoolOff--;
 	}
@@ -51,8 +67,12 @@ public class EnvironmentController {
 	}
 	
 	public void fan(boolean on) {
-		if (fanCoolOff <= 0 || on == false)
-			hvac.fan(on);
+		if (on != fanOn) {
+			if (fanCoolOff <= 0 || on == false) {
+				hvac.fan(on);
+				fanOn = on;
+			}
+		}
 	}
 	
 	private void setFanCoolOff(int ticks) {
