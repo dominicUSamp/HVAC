@@ -167,4 +167,18 @@ public class EnvironmentControllerTest {
 		cont.tick();
 		Assert.assertEquals(cont.heatOn, false);
 	}
+
+	@Test
+	public void testTempGettersAndSetters() {
+		EnvironmentControllerImpl cont =
+				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
+
+		int lowTemp = 100;
+		int highTemp = 200;
+		cont.setHighTemp(highTemp);
+		cont.setLowTemp(lowTemp);
+
+		Assert.assertEquals(lowTemp, cont.getLowTemp());
+		Assert.assertEquals(highTemp, cont.getHighTemp());
+	}
 }

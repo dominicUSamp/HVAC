@@ -6,6 +6,8 @@ public class EnvironmentControllerImpl implements EnvironmentController {
 	public boolean heatOn = false;
 	public boolean coolOn = false;
 	public boolean fanOn = false;
+	private int highTemp;
+	private int lowTemp;
 
 	@Override
 	public HVAC getHvac() {
@@ -73,22 +75,22 @@ public class EnvironmentControllerImpl implements EnvironmentController {
 
 	@Override
 	public void setHighTemp(int temp) {
-
+		this.highTemp = temp;
 	}
 
 	@Override
-	public void setLowTemp(int lowTemp) {
-
+	public void setLowTemp(int temp) {
+		this.lowTemp = temp;
 	}
 
 	@Override
 	public int getHighTemp() {
-		return 0;
+		return this.highTemp;
 	}
 
 	@Override
 	public int getLowTemp() {
-		return 0;
+		return this.lowTemp;
 	}
 
 	private void setFanCoolOff(int ticks) {
