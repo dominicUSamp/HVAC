@@ -1,3 +1,5 @@
+import java.lang.IllegalArgumentException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +21,7 @@ public class EnvironmentCommandManager {
 		this.initialLowTemp = initialLowTemp;
 	}
 
-	public void setTemp(String message) {
+	public void setTemp(String message) throws IllegalArgumentException {
 		Map<String, Integer> parsedMessages = parseCommands(message);
 
 		if(parsedMessages.containsKey("highTemp")) {
@@ -43,10 +45,25 @@ public class EnvironmentCommandManager {
 	}
 
 	private void setLowTemp(Integer lowTemp) {
+		int highTemp = this.controller.getHighTemp();
+
+		if(highTemp - lowTemp < 5){
+			String exceptionMessage = "Low Temperature should be at least 5 degrees cooler than high. High temp set to "+highTemp+".";
+			throw new IllegalArgumentException(exceptionMessage);
+		}
+
 		controller.setLowTemp(lowTemp);
+
 	}
 
-	private void setHighTemp(int highTemp) {
+	private void setHighTemp(int highTemp) throws IllegalArgumentException {
+		int lowTemp = this.controller.getLowTemp();
+
+		if(highTemp - lowTemp < 5){
+			String exceptionMessage = "High Temperature should be at least 5 degrees warmer than low. Low temp set to "+lowTemp+".";
+			throw new IllegalArgumentException(exceptionMessage);
+		}
+
 		controller.setHighTemp(highTemp);
 	}
 

@@ -16,6 +16,10 @@ public interface EnvironmentController {
 
 	void setLowTemp(int lowTemp);
 
+	int getHighTemp();
+
+	int getLowTemp();
+
 	public enum TemperatureValues {
 		TOO_COOL(64), JUST_RIGHT(70), TOO_HOT(76);
 

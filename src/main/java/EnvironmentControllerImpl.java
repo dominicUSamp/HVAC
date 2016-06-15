@@ -81,6 +81,16 @@ public class EnvironmentControllerImpl implements EnvironmentController {
 
 	}
 
+	@Override
+	public int getHighTemp() {
+		return 0;
+	}
+
+	@Override
+	public int getLowTemp() {
+		return 0;
+	}
+
 	private void setFanCoolOff(int ticks) {
 		if (fanCoolOff < ticks)
 			fanCoolOff = ticks;

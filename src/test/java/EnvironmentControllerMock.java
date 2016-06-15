@@ -6,6 +6,8 @@ public class EnvironmentControllerMock implements  EnvironmentController{
 	public boolean highTempCalled = false;
 	public int highTempCalledWith;
 	public int lowTempCalledWith;
+	public int lowTemp = 65;
+	public int highTemp = 75;
 
 	@Override
 	public HVAC getHvac() {
@@ -41,5 +43,15 @@ public class EnvironmentControllerMock implements  EnvironmentController{
 	@Override
 	public void setLowTemp(int lowTemp) {
 		lowTempCalledWith = lowTemp;
+	}
+
+	@Override
+	public int getHighTemp() {
+		return highTemp;
+	}
+
+	@Override
+	public int getLowTemp() {
+		return lowTemp;
 	}
 }
