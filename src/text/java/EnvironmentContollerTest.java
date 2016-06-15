@@ -14,7 +14,7 @@ public class EnvironmentContollerTest {
 	}
 	
 	@Test
-	public void testHeatOnBelow65() {
+	public void testHeatOnWhenToolCool() {
 		EnvironmentController cont = 
 				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.TOO_COOL.value));
 		cont.tick();
@@ -24,7 +24,7 @@ public class EnvironmentContollerTest {
 	}
 	
 	@Test
-	public void testCoolOnAbove75() {
+	public void testCoolOnWhenTooHot() {
 		EnvironmentController cont = 
 				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.TOO_HOT.value));
 		cont.tick();
@@ -33,16 +33,16 @@ public class EnvironmentContollerTest {
 		
 	}
 	
-//	@Test
-//	public void testNothingOn65To75() {
-//		EnvironmentController cont = 
-//				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
-//		
-//		cont.tick();
-//		Assert.assertEquals(((HVACMock)cont.getHvac()).coolCalled, false);
-//		Assert.assertEquals(((HVACMock)cont.getHvac()).heatCalled, false);
-//		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
-//	}
+	@Test
+	public void testNothingOnWhenJustRight() {
+		EnvironmentController cont = 
+				new EnvironmentController(new HVACMock(EnvironmentController.TemperatureValues.JUST_RIGHT.value));
+		
+		cont.tick();
+		Assert.assertEquals(((HVACMock)cont.getHvac()).coolCalled, false);
+		Assert.assertEquals(((HVACMock)cont.getHvac()).heatCalled, false);
+		Assert.assertEquals(((HVACMock)cont.getHvac()).fanCalled, false);
+	}
 	
 	@Test
 	public void testFanCantStartFor5MinAfterHeaterOff() {
