@@ -41,5 +41,7 @@ public class CommandLineTest {
 
 		assertEquals(newHighTemp, CommandLinePartialStub.getController().getHighTemp());
 		assertEquals(lowTemp, CommandLinePartialStub.getController().getLowTemp());
+
+		CommandLinePartialStub.socketWrapper.close();
 	}
 }

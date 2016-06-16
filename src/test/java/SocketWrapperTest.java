@@ -22,9 +22,11 @@ public class SocketWrapperTest {
 
 		final EnvironmentCommandManagerStub stub = new EnvironmentCommandManagerStub(tempCalled);
 
+		final SocketWrapper[] wrapper = new SocketWrapper[1];
+
 		new Thread() {public void run(){
 				try {
-					SocketWrapper wrapper = new SocketWrapper(stub, port);
+					wrapper[0] = new SocketWrapper(stub, port);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -40,5 +42,7 @@ public class SocketWrapperTest {
 
 		assertTrue(stub.tempCalled);
 		assertEquals(data, stub.setTempCalledWith);
+
+		wrapper[0].close();
 	}
 }

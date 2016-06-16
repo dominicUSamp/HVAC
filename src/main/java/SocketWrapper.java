@@ -23,4 +23,8 @@ public class SocketWrapper {
 		String data = in.readLine();
 		this.manager.setTemp(data);
 	}
+
+	public void close() throws IOException {
+		this.serverSocket.close();
+	}
 }
