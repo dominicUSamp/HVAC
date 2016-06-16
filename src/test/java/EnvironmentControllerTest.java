@@ -5,7 +5,16 @@ public class EnvironmentControllerTest {
 
 	HVACMock mock;
 	EnvironmentControllerImpl controller;
-	
+
+	@Test
+	public void testDefaultTemps() {
+		new Given()
+			.build();
+
+		Assert.assertEquals(75, controller.getHighTemp());
+		Assert.assertEquals(65, controller.getLowTemp());
+	}
+
 	@Test
 	public void testHeatOnWhenToolCool() {
 		new Given()
@@ -221,19 +230,17 @@ public class EnvironmentControllerTest {
 		Assert.assertEquals(highTemp, controller.getHighTemp());
 	}
 
-	int lowTemp = 100;
-	int highTemp = 200;
 
 	private void makeItCold(){
-		mock.setTemp(lowTemp - 1);
+		mock.setTemp(controller.getLowTemp() - 1);
 	}
 
 	private void makeItHot(){
-		mock.setTemp(highTemp + 1);
+		mock.setTemp(controller.getHighTemp() + 1);
 	}
 
 	private void makeItOk(){
-		mock.setTemp(highTemp - 1);
+		mock.setTemp(controller.getHighTemp() - 1);
 	}
 
 	class Given{
@@ -243,19 +250,19 @@ public class EnvironmentControllerTest {
 		private boolean coolOn = false;
 
 		public Given itsCold(){
-			this.initialTemp = lowTemp - 1;
+			this.initialTemp = EnvironmentController.initialLowTemp - 1;
 
 			return this;
 		}
 
 		public Given itsHot(){
-			this.initialTemp = highTemp + 1;
+			this.initialTemp = EnvironmentController.initialHighTemp + 1;
 
 			return this;
 		}
 
 		public Given itsOk(){
-			this.initialTemp = lowTemp + 1;
+			this.initialTemp = EnvironmentController.initialLowTemp + 1;
 
 			return this;
 		}
@@ -281,7 +288,7 @@ public class EnvironmentControllerTest {
 
 		public Given build(){
 			mock = new HVACMock(this.initialTemp, this.heatOn, this.coolOn, this.fanOn);
-			controller = new EnvironmentControllerImpl(mock, lowTemp, highTemp);
+			controller = new EnvironmentControllerImpl(mock);
 
 			controller.heatOn = this.heatOn;
 			controller.coolOn = this.coolOn;

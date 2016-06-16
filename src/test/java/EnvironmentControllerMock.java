@@ -9,18 +9,6 @@ public class EnvironmentControllerMock implements  EnvironmentController{
 	public int lowTemp = 65;
 	public int highTemp = 75;
 
-	public void heat(boolean on) {
-
-	}
-
-	public void cool(boolean on) {
-
-	}
-
-	public void fan(boolean on) {
-
-	}
-
 	@Override
 	public void setHighTemp(int temp) {
 		highTempCalled = true;

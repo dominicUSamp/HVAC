@@ -7,13 +7,11 @@ public class EnvironmentControllerImpl implements EnvironmentController {
 	public boolean coolOn = false;
 	public boolean fanOn = false;
 
-	private int highTemp;
-	private int lowTemp;
+	private int highTemp = initialHighTemp;
+	private int lowTemp = initialLowTemp;
 
-	EnvironmentControllerImpl(HVAC hvac, int lowTemp, int highTemp) {
+	EnvironmentControllerImpl(HVAC hvac) {
 		this.hvac = hvac;
-		this.lowTemp = lowTemp;
-		this.highTemp = highTemp;
 	}
 	
 	void tick() {
