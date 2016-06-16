@@ -31,7 +31,7 @@ public class EnvironmentCommandManager {
 		}
 	}
 
-	private Map<String, Integer> parseCommands(String message){
+	protected Map<String, Integer> parseCommands(String message){
 		Map<String, Integer> commands = new HashMap<String, Integer>();
 		String[] multipleMessages = message.split(",");
 
@@ -42,7 +42,7 @@ public class EnvironmentCommandManager {
 		return commands;
 	}
 
-	private void setLowTemp(Integer lowTemp) {
+	protected void setLowTemp(Integer lowTemp) {
 		int highTemp = this.controller.getHighTemp();
 
 		if(highTemp - lowTemp < 5){
@@ -54,7 +54,7 @@ public class EnvironmentCommandManager {
 
 	}
 
-	private void setHighTemp(int highTemp) throws IllegalArgumentException {
+	protected void setHighTemp(int highTemp) throws IllegalArgumentException {
 		int lowTemp = this.controller.getLowTemp();
 
 		if(highTemp - lowTemp < 5){
