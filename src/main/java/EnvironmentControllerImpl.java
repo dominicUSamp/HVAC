@@ -6,45 +6,27 @@ public class EnvironmentControllerImpl implements EnvironmentController {
 	public boolean heatOn = false;
 	public boolean coolOn = false;
 	public boolean fanOn = false;
+
 	private int highTemp;
 	private int lowTemp;
 
-	@Override
-	public HVAC getHvac() {
-		return hvac;
-	}
-
-	@Override
-	public void setHvac(HVAC hvac) {
+	EnvironmentControllerImpl(HVAC hvac, int lowTemp, int highTemp) {
 		this.hvac = hvac;
-	}
-
-	EnvironmentControllerImpl(HVAC hvac) {
-		this.hvac = hvac;
+		this.lowTemp = lowTemp;
+		this.highTemp = highTemp;
 	}
 	
 	void tick() {
-		
-		if (hvac.temp() <= TemperatureValues.TOO_COOL.value) {
-			heat(true);
-			fan(true);
-		} else if (hvac.temp() > TemperatureValues.JUST_RIGHT.value - 2 && !coolOn) {
-			heat(false);
-			fan(false);
-		}
-		
-		if (hvac.temp() >= TemperatureValues.TOO_HOT.value) {
-			cool(true);
-			fan(true);
-		} else if (hvac.temp() < TemperatureValues.JUST_RIGHT.value + 2 && !heatOn) {
-			cool(false);
-			fan(false);
-		}
+		int temp = hvac.temp();
+
+		heat((temp < this.lowTemp));
+		cool((temp > this.highTemp));
+		fan((temp > this.highTemp || temp < this.lowTemp));
+
 		fanCoolOff--;
 	}
-	
-	@Override
-	public void heat(boolean on) {
+
+	private void heat(boolean on) {
 		if (on != heatOn) {
 			hvac.heat(on);
 			if (!on)
@@ -52,9 +34,8 @@ public class EnvironmentControllerImpl implements EnvironmentController {
 			heatOn = on;
 		}
 	}
-	
-	@Override
-	public void cool(boolean on) {
+
+	private void cool(boolean on) {
 		if (on != coolOn) {
 			hvac.cool(on);
 			if (!on)
@@ -62,15 +43,19 @@ public class EnvironmentControllerImpl implements EnvironmentController {
 			coolOn = on;
 		}
 	}
-	
-	@Override
-	public void fan(boolean on) {
+
+	private void fan(boolean on) {
 		if (on != fanOn) {
 			if (fanCoolOff <= 0 || !on) {
 				hvac.fan(on);
 				fanOn = on;
 			}
 		}
+	}
+
+	private void setFanCoolOff(int ticks) {
+		if (fanCoolOff < ticks)
+			fanCoolOff = ticks;
 	}
 
 	@Override
@@ -92,15 +77,4 @@ public class EnvironmentControllerImpl implements EnvironmentController {
 	public int getLowTemp() {
 		return this.lowTemp;
 	}
-
-	private void setFanCoolOff(int ticks) {
-		if (fanCoolOff < ticks)
-			fanCoolOff = ticks;
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

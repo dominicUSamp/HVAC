@@ -9,27 +9,14 @@ public class EnvironmentControllerMock implements  EnvironmentController{
 	public int lowTemp = 65;
 	public int highTemp = 75;
 
-	@Override
-	public HVAC getHvac() {
-		return null;
-	}
-
-	@Override
-	public void setHvac(HVAC hvac) {
-
-	}
-
-	@Override
 	public void heat(boolean on) {
 
 	}
 
-	@Override
 	public void cool(boolean on) {
 
 	}
 
-	@Override
 	public void fan(boolean on) {
 
 	}

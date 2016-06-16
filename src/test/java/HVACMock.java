@@ -1,33 +1,40 @@
 
 public class HVACMock implements HVAC {
-	public boolean heatCalled = false;
-	public boolean coolCalled = false;
-	public boolean fanCalled;
+	public boolean heatOn = false;
+	public boolean coolOn = false;
+	public boolean fanOn = false;
 	private int temp;
 	
-	public HVACMock(int temp) {
+	public HVACMock(int temp, boolean heatOn, boolean coolOn, boolean fanOn) {
 		this.temp = temp;
+		this.heatOn = heatOn;
+		this.coolOn = coolOn;
+		this.fanOn = fanOn;
 	}
 
 	@Override
 	public void heat(boolean on) {
-		heatCalled = true;
+		heatOn = on;
 	}
 
 	@Override
 	public void cool(boolean on) {
-		coolCalled = true;
+		coolOn = on;
 	}
 
 	@Override
 	public void fan(boolean on) {
-		fanCalled = true;
+		fanOn = on;
 
 	}
 
 	@Override
 	public int temp() {
 		return temp;
+	}
+
+	public void setTemp(int temp){
+		this.temp = temp;
 	}
 
 	public static void main(String[] args) {

@@ -1,184 +1,293 @@
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class EnvironmentControllerTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
+	HVACMock mock;
+	EnvironmentControllerImpl controller;
 	
 	@Test
 	public void testHeatOnWhenToolCool() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.TOO_COOL.value));
-		cont.tick();
-		Assert.assertEquals(cont.heatOn, true);
-		Assert.assertEquals(cont.fanOn, true);
+		new Given()
+			.itsCold()
+			.build();
+
+		controller.tick();
+
+		Assert.assertEquals(mock.heatOn, true);
+		Assert.assertEquals(mock.fanOn, true);
 		
 	}
-	
+
 	@Test
 	public void testCoolOnWhenTooHot() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.TOO_HOT.value));
-		cont.tick();
-		Assert.assertEquals(cont.coolOn, true);
-		Assert.assertEquals(cont.fanOn, true);
-		
+		new Given()
+			.itsHot()
+			.build();
+
+		controller.tick();
+
+		Assert.assertEquals(mock.coolOn, true);
+		Assert.assertEquals(mock.fanOn, true);
+
 	}
-	
+
 	@Test
 	public void testNothingOnWhenJustRight() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		
-		cont.tick();
-		Assert.assertEquals(cont.coolOn, false);
-		Assert.assertEquals(cont.heatOn, false);
-		Assert.assertEquals(cont.fanOn, false);
+		new Given()
+			.itsOk()
+			.build();
+
+		controller.tick();
+
+		Assert.assertEquals(mock.coolOn, false);
+		Assert.assertEquals(mock.heatOn, false);
+		Assert.assertEquals(mock.fanOn, false);
 	}
-	
+
 	@Test
 	public void testFanCantStartFor5MinAfterHeaterOff() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		cont.heat(true);
-		cont.heat(false);
-		
-		for (int i = 0 ; i < 5 ; i++) {
-			cont.fan(true);
-			Assert.assertEquals(cont.fanOn, false);
-			cont.tick();
+		new Given()
+			.itsHot()
+			.heatIsOn()
+			.build();
+
+		controller.tick();
+
+		Assert.assertFalse(mock.heatOn);
+		Assert.assertTrue(mock.coolOn);
+		Assert.assertFalse(mock.fanOn);
+
+		for (int i = 0 ; i < 4 ; i++) {
+			controller.tick();
+			Assert.assertEquals("seeing if fan is on the "+(i+1)+" time", mock.fanOn, false);
 		}
-		cont.fan(true);
-		Assert.assertEquals(cont.fanOn, true);
+
+
+		controller.tick();
+		Assert.assertEquals(mock.fanOn, true);
 	}
-	
+
 	@Test
 	public void testFanCantStartFor3MinAfterCoolOff() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		cont.cool(true);
-		cont.cool(false);
-		
+		new Given()
+			.itsCold()
+			.coolIsOn()
+			.build();
+
+		controller.tick();
+
+		Assert.assertTrue(mock.heatOn);
+		Assert.assertFalse(mock.coolOn);
+		Assert.assertFalse(mock.fanOn);
+
+		for (int i = 0 ; i < 2 ; i++) {
+			controller.tick();
+			Assert.assertEquals("seeing if fan is on the "+(i+1)+" time", mock.fanOn, false);
+		}
+
+		controller.tick();
+		Assert.assertEquals(mock.fanOn, true);
+	}
+
+	@Test
+	public void testFanCooldownShouldNotResetWithCoolAfterHeat() {
+		new Given()
+			.itsHot()
+			.heatIsOn()
+			.build();
+
+		controller.tick();
+
+		Assert.assertFalse(mock.heatOn);
+		Assert.assertTrue(mock.coolOn);
+		Assert.assertFalse(mock.fanOn);
+
+		makeItCold();
+
+		controller.tick();
+
+		Assert.assertTrue(mock.heatOn);
+
 		for (int i = 0 ; i < 3 ; i++) {
-			cont.fan(true);
-			Assert.assertEquals(cont.fanOn, false);
-			cont.tick();
+			controller.tick();
+			Assert.assertEquals("seeing if fan is on the "+(i+1)+" time", mock.fanOn, false);
 		}
-		cont.fan(true);
-		Assert.assertEquals(cont.fanOn, true);
+
+		controller.tick();
+		Assert.assertEquals(mock.fanOn, true);
 	}
-	
-	@Test
-	public void testFanCantStartAfterHeaterAndCoolOff() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		cont.heat(true);
-		
-		cont.heat(false);
-		cont.cool(false);
-		for (int i = 0 ; i < 5 ; i++) {
-			cont.fan(true);
-			Assert.assertEquals(cont.fanOn, false);
-			cont.tick();
-		}
-		cont.fan(true);
-		Assert.assertEquals(cont.fanOn, true);
-	}
-	
-	@Test
-	public void testTurnFanOffDuringCoolDown() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		cont.fan(true);
-		cont.heat(false);
-		
-		cont.fan(false);
-		Assert.assertEquals(cont.fanOn, false);
-	}
-	
+
 	@Test
 	public void testTurnHeatOffTwiceDoesntResetTimer() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		cont.heat(true);
-		
-		cont.heat(false);
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.heat(false);
-		cont.fan(true);
-		Assert.assertEquals(cont.fanOn, true);
+		new Given()
+			.itsHot()
+			.heatIsOn()
+			.build();
+
+		controller.tick();
+
+		makeItCold();
+
+		controller.tick();
+
+		makeItHot();
+
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+
+		controller.tick();
+		Assert.assertTrue(mock.fanOn);
 	}
-	
+
 	@Test
 	public void testTurnCoolOffTwiceDoesntResetTimer() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		cont.cool(true);
-		
-		cont.cool(false);
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.tick();
-		cont.cool(false);
-		cont.fan(true);
-		Assert.assertEquals(cont.fanOn, true);
+		new Given()
+			.itsCold()
+			.coolIsOn()
+			.build();
+
+		controller.tick();
+
+		makeItHot();
+
+		controller.tick();
+
+		makeItCold();
+
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+
+		controller.tick();
+		Assert.assertFalse(mock.fanOn);
+
+		controller.tick();
+		Assert.assertTrue(mock.fanOn);
 	}
-	
+
 	@Test
 	public void testCoolOffWhenJustRight() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		cont.cool(true);
-		
-		cont.tick();
-		Assert.assertEquals(cont.coolOn, false);
+		new Given()
+			.itsOk()
+			.coolIsOn()
+			.build();
+
+		controller.tick();
+
+		Assert.assertFalse(mock.coolOn);
 	}
-	
+
 	@Test
 	public void testHeatOffWhenJustRight() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
-		cont.heat(true);
-		
-		cont.tick();
-		Assert.assertEquals(cont.heatOn, false);
+		new Given()
+			.itsOk()
+			.heatIsOn()
+			.build();
+
+		controller.tick();
+
+		Assert.assertFalse(mock.heatOn);
 	}
 
 	@Test
 	public void testTempGettersAndSetters() {
-		EnvironmentControllerImpl cont =
-				new EnvironmentControllerImpl(new HVACMock(EnvironmentControllerImpl.TemperatureValues.JUST_RIGHT.value));
+		new Given()
+			.itsOk()
+			.heatIsOn()
+			.build();
 
-		int lowTemp = 100;
-		int highTemp = 200;
-		cont.setHighTemp(highTemp);
-		cont.setLowTemp(lowTemp);
+		int lowTemp = 0;
+		int highTemp = 2000;
+		controller.setHighTemp(highTemp);
+		controller.setLowTemp(lowTemp);
 
-		Assert.assertEquals(lowTemp, cont.getLowTemp());
-		Assert.assertEquals(highTemp, cont.getHighTemp());
+		Assert.assertEquals(lowTemp, controller.getLowTemp());
+		Assert.assertEquals(highTemp, controller.getHighTemp());
+	}
+
+	int lowTemp = 100;
+	int highTemp = 200;
+
+	private void makeItCold(){
+		mock.setTemp(lowTemp - 1);
+	}
+
+	private void makeItHot(){
+		mock.setTemp(highTemp + 1);
+	}
+
+	private void makeItOk(){
+		mock.setTemp(highTemp - 1);
+	}
+
+	class Given{
+		private int initialTemp = 150;
+		private boolean fanOn = false;
+		private boolean heatOn = false;
+		private boolean coolOn = false;
+
+		public Given itsCold(){
+			this.initialTemp = lowTemp - 1;
+
+			return this;
+		}
+
+		public Given itsHot(){
+			this.initialTemp = highTemp + 1;
+
+			return this;
+		}
+
+		public Given itsOk(){
+			this.initialTemp = lowTemp + 1;
+
+			return this;
+		}
+
+
+		public Given fanIsOn(){
+			this.fanOn = true;
+
+			return this;
+		}
+
+		public Given coolIsOn(){
+			this.coolOn = true;
+
+			return this;
+		}
+
+		public Given heatIsOn(){
+			this.heatOn = true;
+
+			return this;
+		}
+
+		public Given build(){
+			mock = new HVACMock(this.initialTemp, this.heatOn, this.coolOn, this.fanOn);
+			controller = new EnvironmentControllerImpl(mock, lowTemp, highTemp);
+
+			controller.heatOn = this.heatOn;
+			controller.coolOn = this.coolOn;
+			controller.fanOn = this.fanOn;
+
+			return this;
+		}
 	}
 }
