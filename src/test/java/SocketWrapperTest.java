@@ -7,26 +7,7 @@ public class SocketWrapperTest {
 
 	@Test
 	public void testSocketWrapperExists(){
-		new SocketWrapper(new EnvironmentCommandManager(new EnvironmentController() {
-			@Override
-			public void setHighTemp(int temp) {
+		SocketWrapper wrapper = new SocketWrapper(new EnvironmentCommandManagerStub());
 
-			}
-
-			@Override
-			public void setLowTemp(int lowTemp) {
-
-			}
-
-			@Override
-			public int getHighTemp() {
-				return 0;
-			}
-
-			@Override
-			public int getLowTemp() {
-				return 0;
-			}
-		}));
 	}
 }
