@@ -11,10 +11,10 @@ public class SocketWrapper {
 	private final ServerSocket serverSocket;
 	private final Socket socket;
 
-	public SocketWrapper(EnvironmentCommandManager manager) throws IOException {
+	public SocketWrapper(EnvironmentCommandManager manager, int port) throws IOException {
 		this.manager = manager;
 
-		this.serverSocket = new ServerSocket(1919);
+		this.serverSocket = new ServerSocket(port);
 		this.socket = this.serverSocket.accept();
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

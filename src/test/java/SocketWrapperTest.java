@@ -16,6 +16,7 @@ public class SocketWrapperTest {
 	@Test
 	public void testMessageSentToManager() throws IOException, InterruptedException {
 		String data = "first message";
+		final int port = 1919;
 
 		CountDownLatch tempCalled = new CountDownLatch(1);
 
@@ -23,14 +24,14 @@ public class SocketWrapperTest {
 
 		new Thread() {public void run(){
 				try {
-					SocketWrapper wrapper = new SocketWrapper(stub);
+					SocketWrapper wrapper = new SocketWrapper(stub, port);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 		}}.start();
 
 
-		Socket socket = new Socket("localhost",1919);
+		Socket socket = new Socket("localhost",port);
 		PrintWriter out = new PrintWriter(socket.getOutputStream());
 		out.println(data);
 		out.flush();

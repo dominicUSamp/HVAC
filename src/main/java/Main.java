@@ -7,6 +7,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		int highTemp = 100;
 		int lowTemp = 50;
+		int port = 1919;
 
 		HVAC hvac = new HVAC() {
 			@Override
@@ -32,6 +33,6 @@ public class Main {
 
 		EnvironmentController controller = new EnvironmentControllerImpl(hvac);
 		EnvironmentCommandManager manager = new EnvironmentCommandManager(controller, highTemp, lowTemp);
-		SocketWrapper socketWrapper = new SocketWrapper(manager);
+		SocketWrapper socketWrapper = new SocketWrapper(manager, port);
 	}
 }
