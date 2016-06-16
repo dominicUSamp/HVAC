@@ -8,17 +8,15 @@ import java.util.Map;
  */
 public class EnvironmentCommandManager {
 	private final EnvironmentController controller;
-	private int initialHighTemp = 75;
-	private int initialLowTemp = 65;
 
 	public EnvironmentCommandManager(EnvironmentController controller) {
 		this.controller = controller;
 	}
 
-	public EnvironmentCommandManager(EnvironmentController controller, int initialHighTemp, int initialLowTemp) {
+	public EnvironmentCommandManager(EnvironmentController controller, int highTemp, int lowTemp) {
 		this.controller = controller;
-		this.initialHighTemp = initialHighTemp;
-		this.initialLowTemp = initialLowTemp;
+		this.controller.setHighTemp(highTemp);
+		this.controller.setLowTemp(lowTemp);
 	}
 
 	public void setTemp(String message) throws IllegalArgumentException {
@@ -65,13 +63,5 @@ public class EnvironmentCommandManager {
 		}
 
 		controller.setHighTemp(highTemp);
-	}
-
-	public int getInitialHighTemp() {
-		return this.initialHighTemp;
-	}
-
-	public int getInitialLowTemp() {
-		return this.initialLowTemp;
 	}
 }

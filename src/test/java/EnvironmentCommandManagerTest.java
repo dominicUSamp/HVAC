@@ -48,15 +48,6 @@ public class EnvironmentCommandManagerTest {
 	}
 
 	@Test
-	public void testInitialTemps(){
-		EnvironmentControllerMock ecMock = new EnvironmentControllerMock();
-		EnvironmentCommandManager manager = new EnvironmentCommandManager(ecMock);
-
-		assertEquals(65,manager.getInitialLowTemp());
-		assertEquals(75,manager.getInitialHighTemp());
-	}
-
-	@Test
 	public void testOverridingInitialTemps(){
 		int initialHighTemp = 100;
 		int initialLowTemp = 0;
@@ -64,8 +55,8 @@ public class EnvironmentCommandManagerTest {
 		EnvironmentControllerMock ecMock = new EnvironmentControllerMock();
 		EnvironmentCommandManager manager = new EnvironmentCommandManager(ecMock, initialHighTemp, initialLowTemp);
 
-		assertEquals(0,manager.getInitialLowTemp());
-		assertEquals(100,manager.getInitialHighTemp());
+		assertEquals(0,ecMock.lowTempCalledWith);
+		assertEquals(100,ecMock.highTempCalledWith);
 	}
 
 	@Test
